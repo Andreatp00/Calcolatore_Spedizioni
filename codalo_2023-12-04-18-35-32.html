@@ -1,0 +1,298 @@
+<html>
+  <head>
+
+    
+    
+        
+        
+  </head>
+  <body>
+
+    <!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore Tariffe di Spedizione</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: #f0f3f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #calculator {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 340px;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: 600;
+        }
+
+        input,
+        select {
+            width: calc(100% - 16px);
+            padding: 10px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            outline: none;
+            font-size: 16px;
+            color: #34495e;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #ffffff;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #pesoKg,
+        #luogoDestinazioneNote {
+            color: #7f8c8d;
+        }
+
+        #tariffaFinale {
+            text-align: center;
+            font-weight: bold;
+            color: #49BF88;
+            font-size: 25px;
+            margin-bottom: 16px;
+        }
+
+        #assicurazione,
+        #contrassegno {
+            margin-left: 5px;
+        }
+#contacts {
+            text-align: center;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        #contacts p {
+            margin-bottom: 8px;
+            color: #495057;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #contacts a {
+            margin-left: 5px;
+            color: #000000;
+            text-decoration: none;
+        }
+
+        #contacts a:hover {
+            text-decoration: underline;
+        }
+
+        #callButton {
+            background-color: #56E356;
+            color: #ffffff;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        #callButton:hover {
+            background-color: #218838;
+        }
+    </style>
+        
+  
+    </style>
+    <script>
+        function calcolaTariffa() {
+            // Variabili input
+            var pesoKg = parseFloat(document.getElementById("peso_kg").value);
+            var zona = document.getElementById("shipping_calculator_default_zone").value;
+            var altezza = parseFloat(document.getElementById("altezza").value);
+            var larghezza = parseFloat(document.getElementById("larghezza").value);
+            var lunghezza = parseFloat(document.getElementById("lunghezza").value);
+            var contrassegno = document.getElementById("contrassegno").checked;
+            var assicurazione = document.getElementById("assicurazione").checked;
+
+            // Tariffe in base al peso
+            var tariffaPeso = 0;
+
+            if (pesoKg >= 0 && pesoKg <= 2) {
+                tariffaPeso = 5.40;
+            } else if (pesoKg > 2 && pesoKg <= 5) {
+                tariffaPeso = 6.40;
+            } else if (pesoKg > 5 && pesoKg <= 10) {
+                tariffaPeso = 8.00;
+            } else if (pesoKg > 10 && pesoKg <= 20) {
+                tariffaPeso = 13.00;
+            } else if (pesoKg > 20) {
+                tariffaPeso = 23.00;
+            }
+
+            // Aggiunta costi aggiuntivi per assicurazione e contrassegno
+            var costoAssicurazione = 0;
+            var costoContrassegno = 0;
+
+            if (assicurazione) {
+                costoAssicurazione = 8; // Importo fisso per assicurazione
+                if (pesoKg > 1500) {
+                    costoAssicurazione += (pesoKg * 0.06); // Aggiunta 6% per il valore sopra i 1500€
+                }
+            }
+
+            if (contrassegno) {
+                costoContrassegno = (tariffaPeso * 0.02); // Aggiunta 2% per il contrassegno
+                if (costoContrassegno < 4) {
+                    costoContrassegno = 4; // Importo minimo di 4€
+                }
+            }
+
+            // Calcolo totale
+            var totale = tariffaPeso + costoAssicurazione + costoContrassegno;
+
+            // Visualizzazione risultati
+            document.getElementById("pesoKg").innerText = "Peso: " + pesoKg + " Kg";
+            document.getElementById("tariffaFinale").innerText = "Tariffa Finale: €" + totale.toFixed(2);
+        }
+    </script>
+</head>
+
+<body>
+
+    <div id="container">
+        <div id="calculator">
+            <h2>Calcolatore Tariffe di Spedizione Trapani</h2>
+            <label for="peso_kg">Peso in Kg</label>
+            <input type="number" id="peso_kg" placeholder="Inserisci il peso in Kg" required>
+            <label for="shipping_calculator_default_zone">Zona di Spedizione</label>
+            <select id="shipping_calculator_default_zone" disabled>
+                <option value="italia">Italia</option>
+            </select>
+            <label for="altezza">Altezza (cm)</label>
+            <input type="number" id="altezza" placeholder="Inserisci l'altezza in cm" required>
+            <label for="larghezza">Larghezza (cm)</label>
+            <input type="number" id="larghezza" placeholder="Inserisci la larghezza in cm" required>
+            <label for="lunghezza">Lunghezza (cm)</label>
+            <input type="number" id="lunghezza" placeholder="Inserisci la lunghezza in cm" required>
+            <label for="contrassegno">Contrassegno</label>
+            <input type="checkbox" id="contrassegno">
+            <label for="assicurazione">Assicurazione</label>
+            <input type="checkbox" id="assicurazione">
+
+            <button onclick="calcolaTariffa()">Calcola Tariffa</button>
+
+            <div id="result">
+                <p id="pesoKg"></p>
+                <p id="tariffaFinale"></p>
+                <p id="luogoDestinazioneNote">(il prezzo è uguale per tutti gli indirizzi)</p>
+            </div>
+        </div>
+
+        <div id="contacts">
+            <p>Per prenotare la spedizione:</p>
+            <p>
+                <span><img src="https://cdn-icons-png.flaticon.com/512/2989/2989993.png" alt="Email Icon" width="16" height="16"></span>
+                Scrivi a: <a href="mailto:spedireatrapani@gmail.com">spedireatrapani@gmail.com</a>
+            </p>
+            <p>
+                <span><img src="https://cdn.icon-icons.com/icons2/3041/PNG/512/whatsapp_logo_icon_189219.png" alt="Phone Icon" width="16" height="16"></span>
+                Chiama: 092326911
+            </p>
+            <a id="callButton" href="https://api.whatsapp.com/message/JNJZ5CSJ3B5HM1?autoload=1&app_absent=0" target="_blank">Prenota tramite WhatsApp</a>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+    
+  </body>
+</html>
+    
+  </body>
+</html>
